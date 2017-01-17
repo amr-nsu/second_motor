@@ -19,5 +19,9 @@ void ROBOT_Backward(uint16_t);
 void ROBOT_Right(uint16_t);
 void ROBOT_Left(uint16_t);
 void ROBOT_Stop();
+typedef enum {
+  STATUS_OK,
+  STATUS_ERROR,
+} StatusTypeDef;
 
 #endif  // __FUNC_H
