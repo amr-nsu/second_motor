@@ -121,26 +121,26 @@ void StartIndicatorTask(void const * argument)
 
   /* USER CODE BEGIN StartIndicatorTask */
   StatusTypeDef status;
-  uint16_t onTime = 100;
-  uint16_t offTime = 1000;
+  uint16_t timeOn = 100;
+  uint16_t timeOff = 1000;
   /* Infinite loop */
   for(;;)
   {
     if (xQueueReceive(StatusHandle,&status,0)) {
       if (status == STATUS_OK) {
-        onTime = 100;
-        offTime = 1000;
+        timeOn = 100;
+        timeOff = 1000;
       }
       else {
-        onTime = 100;
-        offTime = 100;
+        timeOn = 100;
+        timeOff = 100;
       }
     }
 
     HAL_GPIO_WritePin(Indicator_GPIO_Port, Indicator_Pin, GPIO_PIN_RESET);
-    osDelay(onTime);
+    osDelay(timeOn);
     HAL_GPIO_WritePin(Indicator_GPIO_Port, Indicator_Pin, GPIO_PIN_SET);
-    osDelay(offTime);
+    osDelay(timeOff);
 
   }
   /* USER CODE END StartIndicatorTask */
@@ -158,10 +158,10 @@ void StartUARTTask(void const * argument)
   {
     if (HAL_UART_Receive(&huart1, &data, 1, 100) == HAL_OK)
     {
+      status = STATUS_OK;
       if (data == 'F')
       {
         ROBOT_Forward(100);
-        status = STATUS_OK;
       }
       else if (data == 'B')
       {
