@@ -126,7 +126,7 @@ void StartIndicatorTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    if (xQueueReceive(StatusHandle,&status,0)) {
+    if (xQueueReceive(StatusHandle, &status, 0)) {
       if (status == STATUS_OK) {
         timeOn = 100;
         timeOff = 1000;
@@ -184,7 +184,7 @@ void StartUARTTask(void const * argument)
         data = 'n';
         status = STATUS_ERROR;
       }
-      xQueueSend(StatusHandle,&status, 0);
+      xQueueSend(StatusHandle, &status, 0);
       HAL_UART_Transmit(&huart1, &data, 1, 100);
     }
   }
