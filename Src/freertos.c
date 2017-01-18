@@ -120,8 +120,9 @@ void StartIndicatorTask(void const * argument)
 {
   /* USER CODE BEGIN StartIndicatorTask */
   StatusTypeDef status;
-  uint32_t timeOn = 100;
-  uint32_t timeOff = 1000;
+  uint16_t timeOn = 100;
+  uint16_t timeOff = 1000;
+
   /* Infinite loop */
   for(;;)
   {
@@ -139,6 +140,7 @@ void StartIndicatorTask(void const * argument)
       }
     }
 
+    /* Blink led indicator */
     HAL_GPIO_WritePin(Indicator_GPIO_Port, Indicator_Pin, GPIO_PIN_RESET);
     osDelay(timeOn);
     HAL_GPIO_WritePin(Indicator_GPIO_Port, Indicator_Pin, GPIO_PIN_SET);
@@ -155,6 +157,7 @@ void StartUARTTask(void const * argument)
   StatusTypeDef status;
 
   ROBOT_Init();
+
   /* Infinite loop */
   for(;;)
   {
