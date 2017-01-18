@@ -12,6 +12,15 @@
 #define COR_L 1.00
 #define COR_R 0.90
 
+/**
+  * Robot status enumeration
+  */
+typedef enum
+{
+  STATUS_OK,
+  STATUS_ERROR,
+} StatusTypeDef;
+
 /* Function prototypes */
 void ROBOT_Init();
 void ROBOT_Forward(uint16_t);
@@ -19,9 +28,5 @@ void ROBOT_Backward(uint16_t);
 void ROBOT_Right(uint16_t);
 void ROBOT_Left(uint16_t);
 void ROBOT_Stop();
-typedef enum {
-  STATUS_OK,
-  STATUS_ERROR,
-} StatusTypeDef;
 
 #endif  // __FUNC_H

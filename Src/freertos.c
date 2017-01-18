@@ -118,20 +118,22 @@ void MX_FREERTOS_Init(void) {
 /* StartIndicatorTask function */
 void StartIndicatorTask(void const * argument)
 {
-
   /* USER CODE BEGIN StartIndicatorTask */
   StatusTypeDef status;
-  uint16_t timeOn = 100;
-  uint16_t timeOff = 1000;
+  uint32_t timeOn = 100;
+  uint32_t timeOff = 1000;
   /* Infinite loop */
   for(;;)
   {
-    if (xQueueReceive(StatusHandle, &status, 0)) {
-      if (status == STATUS_OK) {
+    if (xQueueReceive(StatusHandle, &status, 0))
+    {
+      if (status == STATUS_OK)
+      {
         timeOn = 100;
         timeOff = 1000;
       }
-      else {
+      else
+      {
         timeOn = 100;
         timeOff = 100;
       }
@@ -141,7 +143,6 @@ void StartIndicatorTask(void const * argument)
     osDelay(timeOn);
     HAL_GPIO_WritePin(Indicator_GPIO_Port, Indicator_Pin, GPIO_PIN_SET);
     osDelay(timeOff);
-
   }
   /* USER CODE END StartIndicatorTask */
 }
@@ -151,8 +152,9 @@ void StartUARTTask(void const * argument)
 {
   /* USER CODE BEGIN StartUARTTask */
   uint8_t data;
-  ROBOT_Init();
   StatusTypeDef status;
+
+  ROBOT_Init();
   /* Infinite loop */
   for(;;)
   {
