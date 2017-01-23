@@ -5,6 +5,8 @@
 #ifndef __FUNC_H
 #define __FUNC_H
 
+extern uint16_t adcResult[8];
+
 /**
   * Corrects the PWM value depend on motor
   */

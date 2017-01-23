@@ -1,7 +1,8 @@
 /**
   ******************************************************************************
-  * File Name          : main.h
-  * Description        : This file contains the common defines of the application
+  * File Name          : dma.h
+  * Description        : This file contains all the function prototypes for
+  *                      the dma.c file
   ******************************************************************************
   *
   * Copyright (c) 2017 STMicroelectronics International N.V. 
@@ -41,45 +42,42 @@
   ******************************************************************************
   */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __MAIN_H
-#define __MAIN_H
-  /* Includes ------------------------------------------------------------------*/
+#ifndef __dma_H
+#define __dma_H
+
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
+/* Includes ------------------------------------------------------------------*/
+#include "stm32f1xx_hal.h"
+#include "main.h"
+
+/* DMA memory to memory transfer handles -------------------------------------*/
+extern void Error_Handler(void);
 
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
 
-/* Private define ------------------------------------------------------------*/
-
-#define Indicator_Pin GPIO_PIN_13
-#define Indicator_GPIO_Port GPIOC
-#define ADC_Bat_V_Pin GPIO_PIN_0
-#define ADC_Bat_V_GPIO_Port GPIOA
-#define ADC_Bat_I_Pin GPIO_PIN_1
-#define ADC_Bat_I_GPIO_Port GPIOA
-#define ADC_IR1_Pin GPIO_PIN_2
-#define ADC_IR1_GPIO_Port GPIOA
-#define ADC_IR2_Pin GPIO_PIN_3
-#define ADC_IR2_GPIO_Port GPIOA
-#define ADC_IR3_Pin GPIO_PIN_4
-#define ADC_IR3_GPIO_Port GPIOA
-#define ADC_IR4_Pin GPIO_PIN_5
-#define ADC_IR4_GPIO_Port GPIOA
-#define ADC_IR5_Pin GPIO_PIN_6
-#define ADC_IR5_GPIO_Port GPIOA
-#define ADC_IR6_Pin GPIO_PIN_7
-#define ADC_IR6_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
 
-/**
-  * @}
-  */ 
+void MX_DMA_Init(void);
+
+/* USER CODE BEGIN Prototypes */
+
+/* USER CODE END Prototypes */
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __dma_H */
 
 /**
   * @}
-*/ 
+  */
 
-#endif /* __MAIN_H */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

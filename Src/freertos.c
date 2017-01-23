@@ -118,6 +118,7 @@ void MX_FREERTOS_Init(void) {
 /* StartIndicatorTask function */
 void StartIndicatorTask(void const * argument)
 {
+
   /* USER CODE BEGIN StartIndicatorTask */
   StatusTypeDef status;
   uint16_t timeOn = 100;
@@ -184,6 +185,10 @@ void StartUARTTask(void const * argument)
       {
         ROBOT_Left(80);
       }
+      else if (data=='A')
+     {
+        data= adcResult[0]>>4;
+     }
       else
       {
         data = 'n';

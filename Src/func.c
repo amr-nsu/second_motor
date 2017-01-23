@@ -9,6 +9,8 @@
 extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim3;
 
+uint16_t adcResult[8];
+
 /** @defgroup ROBOT_CONTROL_FUNCTIONS Robot Control Functions
   * @{
   */
