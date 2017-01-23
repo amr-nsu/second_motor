@@ -5,9 +5,7 @@
 
 #include "gpio.h"
 #include "func.h"
-
-extern TIM_HandleTypeDef htim2;
-extern TIM_HandleTypeDef htim3;
+#include "tim.h"
 
 uint16_t adcResult[8];
 

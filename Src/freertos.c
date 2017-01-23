@@ -186,9 +186,9 @@ void StartUARTTask(void const * argument)
         ROBOT_Left(80);
       }
       else if (data=='A')
-     {
+      {
         data= adcResult[0]>>4;
-     }
+      }
       else
       {
         data = 'n';
