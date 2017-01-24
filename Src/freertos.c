@@ -133,6 +133,7 @@ void StartIndicatorTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
+    /* Message receive */
     if (xQueueReceive(StatusHandle, &status, 0))
     {
       if (status == STATUS_OK)
@@ -145,14 +146,14 @@ void StartIndicatorTask(void const * argument)
         timeOn = 100;
         timeOff = 100;
       }
-     if (status == STATUS_LOW)
-          {
-       HAL_GPIO_WritePin(Battery_GPIO_Port, Battery_Pin, GPIO_PIN_SET);
-          }
-     if (status == STATUS_NORMAL)
-              {
-       HAL_GPIO_WritePin(Battery_GPIO_Port, Battery_Pin, GPIO_PIN_RESET);
-              }
+      if (status == STATUS_LOW)
+      {
+        HAL_GPIO_WritePin(Battery_GPIO_Port, Battery_Pin, GPIO_PIN_SET);
+      }
+      if (status == STATUS_NORMAL)
+      {
+        HAL_GPIO_WritePin(Battery_GPIO_Port, Battery_Pin, GPIO_PIN_RESET);
+      }
     }
 
     /* Blink led indicator */
@@ -199,14 +200,14 @@ void StartUARTTask(void const * argument)
       {
         ROBOT_Left(80);
       }
-      else if (data == 'A')
+      else if (data == 'A') // Battery
       {
-        data = adcResult[0]>>4;
+        data = adcResult[0]>>4;           // 12bit adc to 8bit responce
       }
-      else if ((data >='1') && (data <='6'))
+      else if ((data >= '1') && (data <= '6')) // IR1..6
       {
-        size_t channel = data - '1' + 2;
-        data = adcResult[channel]>>4;
+        size_t channel = data - '1' + 2;  // IR1 value is adcResult[2]
+        data = adcResult[channel]>>4;     // 12bit adc to 8bit responce
       }
       else
       {
@@ -229,10 +230,11 @@ void StartStatusTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    float battery_V = adcResult[0] * 33.0 / 4095.0;
+    /* Battery voltage is 10 * ADC input voltage */
+    float battery_V = 10. * adcResult[0] * 3.3 / 4095.;
     if (battery_V < 10.0)
     {
-     status = STATUS_LOW;
+      status = STATUS_LOW;
     }
     else
     {
