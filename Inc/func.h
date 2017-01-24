@@ -21,6 +21,8 @@ typedef enum
 {
   STATUS_OK,
   STATUS_ERROR,
+  STATUS_LOW,
+  STATUS_NORMAL
 } StatusTypeDef;
 
 /* Function prototypes */

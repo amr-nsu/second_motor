@@ -55,6 +55,7 @@
 /* Variables -----------------------------------------------------------------*/
 osThreadId IndicatorTaskHandle;
 osThreadId UARTTaskHandle;
+osThreadId StatusTaskHandle;
 osMessageQId StatusHandle;
 
 /* USER CODE BEGIN Variables */
@@ -64,6 +65,7 @@ osMessageQId StatusHandle;
 /* Function prototypes -------------------------------------------------------*/
 void StartIndicatorTask(void const * argument);
 void StartUARTTask(void const * argument);
+void StartStatusTask(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -101,6 +103,10 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(UARTTask, StartUARTTask, osPriorityIdle, 0, 128);
   UARTTaskHandle = osThreadCreate(osThread(UARTTask), NULL);
 
+  /* definition and creation of StatusTask */
+  osThreadDef(StatusTask, StartStatusTask, osPriorityIdle, 0, 128);
+  StatusTaskHandle = osThreadCreate(osThread(StatusTask), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -134,11 +140,19 @@ void StartIndicatorTask(void const * argument)
         timeOn = 100;
         timeOff = 1000;
       }
-      else
+      if (status == STATUS_ERROR)
       {
         timeOn = 100;
         timeOff = 100;
       }
+     if (status == STATUS_LOW)
+          {
+       HAL_GPIO_WritePin(Battery_GPIO_Port, Battery_Pin, GPIO_PIN_SET);
+          }
+     if (status == STATUS_NORMAL)
+              {
+       HAL_GPIO_WritePin(Battery_GPIO_Port, Battery_Pin, GPIO_PIN_RESET);
+              }
     }
 
     /* Blink led indicator */
@@ -146,6 +160,7 @@ void StartIndicatorTask(void const * argument)
     osDelay(timeOn);
     HAL_GPIO_WritePin(Indicator_GPIO_Port, Indicator_Pin, GPIO_PIN_SET);
     osDelay(timeOff);
+
   }
   /* USER CODE END StartIndicatorTask */
 }
@@ -156,7 +171,6 @@ void StartUARTTask(void const * argument)
   /* USER CODE BEGIN StartUARTTask */
   uint8_t data;
   StatusTypeDef status;
-
   ROBOT_Init();
 
   /* Infinite loop */
@@ -185,9 +199,14 @@ void StartUARTTask(void const * argument)
       {
         ROBOT_Left(80);
       }
-      else if (data=='A')
+      else if (data == 'A')
       {
-        data= adcResult[0]>>4;
+        data = adcResult[0]>>4;
+      }
+      else if ((data >='1') && (data <='6'))
+      {
+        size_t channel = data - '1' + 2;
+        data = adcResult[channel]>>4;
       }
       else
       {
@@ -199,6 +218,30 @@ void StartUARTTask(void const * argument)
     }
   }
   /* USER CODE END StartUARTTask */
+}
+
+/* StartStatusTask function */
+void StartStatusTask(void const * argument)
+{  StatusTypeDef status;
+
+  /* USER CODE BEGIN StartStatusTask */
+
+  /* Infinite loop */
+  for(;;)
+  {
+    float battery_V = adcResult[0] * 33.0 / 4095.0;
+    if (battery_V < 10.0)
+    {
+     status = STATUS_LOW;
+    }
+    else
+    {
+      status = STATUS_NORMAL;
+    }
+    xQueueSend(StatusHandle, &status, 0);
+    osDelay(2000);
+  }
+  /* USER CODE END StartStatusTask */
 }
 
 /* USER CODE BEGIN Application */

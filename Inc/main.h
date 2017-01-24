@@ -53,6 +53,8 @@
 
 #define Indicator_Pin GPIO_PIN_13
 #define Indicator_GPIO_Port GPIOC
+#define Battery_Pin GPIO_PIN_14
+#define Battery_GPIO_Port GPIOC
 #define ADC_Bat_V_Pin GPIO_PIN_0
 #define ADC_Bat_V_GPIO_Port GPIOA
 #define ADC_Bat_I_Pin GPIO_PIN_1
