@@ -124,6 +124,7 @@ void MX_FREERTOS_Init(void) {
 /* StartIndicatorTask function */
 void StartIndicatorTask(void const * argument)
 {
+
   /* USER CODE BEGIN StartIndicatorTask */
   StatusTypeDef status;
   uint16_t timeOn = 100;
