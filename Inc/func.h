@@ -19,10 +19,11 @@ extern uint16_t adcResult[8];
   */
 typedef enum
 {
+  STATUS_NONE,
   STATUS_OK,
   STATUS_ERROR,
-  STATUS_LOW,
-  STATUS_NORMAL
+  STATUS_POWER_LOW,
+  STATUS_POWER_NORMAL,
 } StatusTypeDef;
 
 /* Function prototypes */

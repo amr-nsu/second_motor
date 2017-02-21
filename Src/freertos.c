@@ -145,11 +145,11 @@ void StartIndicatorTask(void const * argument)
         timeOn = 100;
         timeOff = 100;
       }
-      if (status == STATUS_LOW)
+      if (status == STATUS_POWER_LOW)
       {
         HAL_GPIO_WritePin(Battery_GPIO_Port, Battery_Pin, GPIO_PIN_SET);
       }
-      if (status == STATUS_NORMAL)
+      if (status == STATUS_POWER_NORMAL)
       {
         HAL_GPIO_WritePin(Battery_GPIO_Port, Battery_Pin, GPIO_PIN_RESET);
       }
@@ -171,6 +171,7 @@ void StartUARTTask(void const * argument)
   /* USER CODE BEGIN StartUARTTask */
   uint8_t data;
   StatusTypeDef status;
+  StatusTypeDef status_last = STATUS_NONE;
   ROBOT_Init();
 
   /* Infinite loop */
@@ -213,7 +214,12 @@ void StartUARTTask(void const * argument)
         data = 'n';
         status = STATUS_ERROR;
       }
-      xQueueSend(StatusHandle, &status, 0);
+
+      /* check last status */
+      if (status_last != status) {
+        status_last = status;
+        xQueueSend(StatusHandle, &status, 0);
+      }
       HAL_UART_Transmit(&huart1, &data, 1, 100);
     }
   }
@@ -225,22 +231,28 @@ void StartStatusTask(void const * argument)
 {
   /* USER CODE BEGIN StartStatusTask */
   StatusTypeDef status;
+  StatusTypeDef status_last = STATUS_NONE;
 
   /* Infinite loop */
   for(;;)
   {
-    /* Battery voltage is 10 * ADC input voltage */
-    float battery_V = 10. * adcResult[0] * 3.3 / 4095.;
+    /* Battery voltage is 11 * ADC input voltage */
+    float battery_V = 11.0 * adcResult[0] * 3.3 / 4095.;
     if (battery_V < 10.0)
     {
-      status = STATUS_LOW;
+      status = STATUS_POWER_LOW;
     }
     else
     {
-      status = STATUS_NORMAL;
+      status = STATUS_POWER_NORMAL;
     }
-    xQueueSend(StatusHandle, &status, 0);
-    osDelay(2000);
+
+    /* check last status */
+    if (status_last != status) {
+      status_last = status;
+      xQueueSend(StatusHandle, &status, 0);
+    }
+    osDelay(1000);
   }
   /* USER CODE END StartStatusTask */
 }
