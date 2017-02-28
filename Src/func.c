@@ -26,6 +26,35 @@ void ROBOT_Init()
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
 }
 
+void ROBOT_Move(int16_t vel1, int16_t vel2)
+{
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+
+  // Right motor
+  if (vel1 > 0)
+  {
+  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, 0);
+  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, PWM(vel1, COR_R));
+  }
+  else
+  {
+    vel1=-vel1;
+    __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, PWM(vel1, COR_R));
+    __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 0);
+  }
+  // Left motor
+  if (vel2 > 0)
+    {
+    __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, PWM(vel2, COR_R));
+    __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 0);
+     }
+    else
+    {
+    vel2=-vel2;
+    __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 0);
+    __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, PWM(vel2, COR_R));
+    }
+}
 /**
   * Set forward velocity
   */

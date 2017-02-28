@@ -32,6 +32,7 @@ void ROBOT_Forward(uint16_t);
 void ROBOT_Backward(uint16_t);
 void ROBOT_Right(uint16_t);
 void ROBOT_Left(uint16_t);
+void ROBOT_Move (int16_t, int16_t);
 void ROBOT_Stop();
 
 #endif  // __FUNC_H

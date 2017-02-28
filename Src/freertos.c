@@ -50,6 +50,7 @@
 #include "gpio.h"
 #include "func.h"
 #include "usart.h"
+#include "stdlib.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -170,49 +171,65 @@ void StartIndicatorTask(void const * argument)
 void StartUARTTask(void const * argument)
 {
   /* USER CODE BEGIN StartUARTTask */
-  uint8_t data;
+  uint8_t data = 0;
+  uint8_t str[10];
+  int i=0;
+  char * endptr;
+  int v1;
+  int v2;
   StatusTypeDef status;
   StatusTypeDef status_last = STATUS_NONE;
   ROBOT_Init();
-
   /* Infinite loop */
   for(;;)
   {
-    if (HAL_UART_Receive(&huart1, &data, 1, 100) == HAL_OK)
+    while(data != '\n')
     {
-      status = STATUS_OK;
-      if (data == 'F')
+      if (HAL_UART_Receive(&huart1, &data, 1, 100) == HAL_OK)
       {
-        ROBOT_Forward(100);
+        str[i]=data;
+        i++;
       }
-      else if (data == 'B')
+    }
+      status = STATUS_OK;
+      if (str[0] == 'M')
+      {
+        v1 = strtol((char *)str+1, &endptr, 10);
+        v2 = strtol(endptr+1, &endptr, 10);
+        ROBOT_Move(v1, v2);
+      }
+      else if (str[0] == 'B')
       {
         ROBOT_Backward(100);
       }
-      else if (data == 'S')
+      else if (str[0] == 'F')
+      {
+        ROBOT_Forward(100);
+      }
+      else if (str[0] == 'S')
       {
         ROBOT_Stop();
       }
-      else if (data == 'R')
+      else if (str[0] == 'R')
       {
         ROBOT_Right(80);
       }
-      else if (data == 'L')
+      else if (str[0] == 'L')
       {
         ROBOT_Left(80);
       }
-      else if (data == 'A') // Battery
+      else if (str[0] == 'A') // Battery
       {
-        data = adcResult[0]>>4;           // 12bit adc to 8bit responce
+        str[0] = adcResult[0]>>4;           // 12bit adc to 8bit responce
       }
-      else if ((data >= '1') && (data <= '6')) // IR1..6
+      else if ((str[0] >= '1') && (str[0] <= '6')) // IR1..6
       {
-        size_t channel = data - '1' + 2;  // IR1 value is adcResult[2]
-        data = adcResult[channel]>>4;     // 12bit adc to 8bit responce
+        size_t channel = str[0] - '1' + 2;  // IR1 value is adcResult[2]
+        str[0] = adcResult[channel]>>4;     // 12bit adc to 8bit responce
       }
       else
       {
-        data = 'n';
+        str[0] = 'n';
         status = STATUS_ERROR;
       }
 
@@ -221,8 +238,10 @@ void StartUARTTask(void const * argument)
         status_last = status;
         xQueueSend(StatusHandle, &status, 0);
       }
-      HAL_UART_Transmit(&huart1, &data, 1, 100);
-    }
+      HAL_UART_Transmit(&huart1, str, i, 100);
+      i=0;
+      data=0;
+
   }
   /* USER CODE END StartUARTTask */
 }
