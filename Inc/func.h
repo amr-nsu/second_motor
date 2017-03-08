@@ -7,15 +7,13 @@
 
 extern uint16_t adcResult[8];
 
-/**
-  * Corrects the PWM value depend on motor
+/** Corrects the PWM value depend on motor
   */
 #define PWM(VALUE, CORRECTION) ((uint16_t)(VALUE * CORRECTION))
 #define COR_L 0.95
 #define COR_R 1.00
 
-/**
-  * Robot status enumeration
+/** Robot status enumeration
   */
 typedef enum
 {

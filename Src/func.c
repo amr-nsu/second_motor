@@ -13,8 +13,7 @@ uint16_t adcResult[8];
   * @{
   */
 
-/**
-  * Starts the PWM signal generation for all control channels
+/** Starts the PWM signal generation for all control channels
   */
 void ROBOT_Init()
 {
@@ -26,10 +25,10 @@ void ROBOT_Init()
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
 }
 
+/** Set wheels velocity
+  */
 void ROBOT_Move(int16_t vel1, int16_t vel2)
 {
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-
   // Right motor
   if (vel1 > 0)
   {
@@ -38,30 +37,28 @@ void ROBOT_Move(int16_t vel1, int16_t vel2)
   }
   else
   {
-    vel1=-vel1;
+    vel1 = -vel1;
     __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, PWM(vel1, COR_R));
     __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 0);
   }
   // Left motor
   if (vel2 > 0)
-    {
+  {
     __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, PWM(vel2, COR_R));
     __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 0);
-     }
-    else
-    {
-    vel2=-vel2;
+  }
+  else
+  {
+    vel2 = -vel2;
     __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 0);
     __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, PWM(vel2, COR_R));
-    }
+  }
 }
-/**
-  * Set forward velocity
+
+/** Set forward velocity
   */
 void ROBOT_Forward(uint16_t vel)
 {
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-
   // Right motor
   __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, 0);
   __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, PWM(vel, COR_R));
@@ -70,13 +67,10 @@ void ROBOT_Forward(uint16_t vel)
   __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 0);
 }
 
-/**
-  * Set backward velocity
+/** Set backward velocity
   */
 void ROBOT_Backward(uint16_t vel)
 {
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-
   // Right motor
   __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, PWM(vel, COR_R));
   __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 0);
@@ -85,13 +79,10 @@ void ROBOT_Backward(uint16_t vel)
   __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, PWM(vel, COR_L));
 }
 
-/**
-  * Set left rotation velocity
+/** Set left rotation velocity
   */
 void ROBOT_Left(uint16_t vel)
 {
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-
   // Right motor
   __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, 0);
   __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, PWM(vel, COR_R));
@@ -100,13 +91,10 @@ void ROBOT_Left(uint16_t vel)
   __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, PWM(vel, COR_L));
 }
 
-/**
-  * Set right rotation velocity
+/** Set right rotation velocity
   */
 void ROBOT_Right(uint16_t vel)
 {
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-
   // Right motor
   __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, PWM(vel, COR_R));
   __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 0);
@@ -115,13 +103,10 @@ void ROBOT_Right(uint16_t vel)
   __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 0);
 }
 
-/**
-  * Stop for all motor
+/** Stop for all motor
   */
 void ROBOT_Stop()
 {
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
-
   // Right motor
   __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, 0);
   __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 0);
