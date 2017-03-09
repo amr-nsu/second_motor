@@ -29,29 +29,29 @@ void ROBOT_Init()
   */
 void ROBOT_Move(int16_t vel1, int16_t vel2)
 {
-  // Right motor
+  // Left motor
   if (vel1 > 0)
   {
-  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, 0);
-  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, PWM(vel1, COR_R));
-  }
-  else
-  {
-    vel1 = -vel1;
-    __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, PWM(vel1, COR_R));
-    __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 0);
-  }
-  // Left motor
-  if (vel2 > 0)
-  {
-    __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, PWM(vel2, COR_R));
+    __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, PWM(vel1, COR_L));
     __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 0);
   }
   else
   {
-    vel2 = -vel2;
+    vel1 = -vel1;
     __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 0);
-    __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, PWM(vel2, COR_R));
+    __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, PWM(vel1, COR_L));
+  }
+  // Right motor
+  if (vel2 > 0)
+  {
+  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, 0);
+  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, PWM(vel2, COR_R));
+  }
+  else
+  {
+    vel2 = -vel2;
+    __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, PWM(vel2, COR_R));
+    __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 0);
   }
 }
 
