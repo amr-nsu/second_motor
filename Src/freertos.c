@@ -175,14 +175,15 @@ void StartUARTTask(void const * argument)
   uint8_t str[10];
   int i=0;
   char * endptr;
-  int v1;
-  int v2;
   StatusTypeDef status;
   StatusTypeDef status_last = STATUS_NONE;
+
   ROBOT_Init();
+
   /* Infinite loop */
   for(;;)
   {
+    /* get request */
     while(data != '\n')
     {
       if (HAL_UART_Receive(&huart1, &data, 1, 100) == HAL_OK)
@@ -191,57 +192,61 @@ void StartUARTTask(void const * argument)
         i++;
       }
     }
-      status = STATUS_OK;
-      if (str[0] == 'M')
-      {
-        v1 = strtol((char *)str+1, &endptr, 10);
-        v2 = strtol(endptr+1, &endptr, 10);
-        ROBOT_Move(v1, v2);
-      }
-      else if (str[0] == 'B')
-      {
-        ROBOT_Backward(100);
-      }
-      else if (str[0] == 'F')
-      {
-        ROBOT_Forward(100);
-      }
-      else if (str[0] == 'S')
-      {
-        ROBOT_Stop();
-      }
-      else if (str[0] == 'R')
-      {
-        ROBOT_Right(80);
-      }
-      else if (str[0] == 'L')
-      {
-        ROBOT_Left(80);
-      }
-      else if (str[0] == 'A') // Battery
-      {
-        str[0] = adcResult[0]>>4;           // 12bit adc to 8bit responce
-      }
-      else if ((str[0] >= '1') && (str[0] <= '6')) // IR1..6
-      {
-        size_t channel = str[0] - '1' + 2;  // IR1 value is adcResult[2]
-        str[0] = adcResult[channel]>>4;     // 12bit adc to 8bit responce
-      }
-      else
-      {
-        str[0] = 'n';
-        status = STATUS_ERROR;
-      }
 
-      /* check last status */
-      if (status_last != status) {
-        status_last = status;
-        xQueueSend(StatusHandle, &status, 0);
-      }
-      HAL_UART_Transmit(&huart1, str, i, 100);
-      i=0;
-      data=0;
+    /* apply request */
+    status = STATUS_OK;
+    if (str[0] == 'M')
+    {
+      int v1 = strtol((char *)str+1, &endptr, 10);
+      int v2 = strtol(endptr+1, &endptr, 10);
+      ROBOT_Move(v1, v2);
+    }
+    else if (str[0] == 'B')
+    {
+      ROBOT_Backward(100);
+    }
+    else if (str[0] == 'F')
+    {
+      ROBOT_Forward(100);
+    }
+    else if (str[0] == 'S')
+    {
+      ROBOT_Stop();
+    }
+    else if (str[0] == 'R')
+    {
+      ROBOT_Right(80);
+    }
+    else if (str[0] == 'L')
+    {
+      ROBOT_Left(80);
+    }
+    else if (str[0] == 'A') // Battery
+    {
+      str[0] = adcResult[0]>>4;           // 12bit adc to 8bit responce
+    }
+    else if ((str[0] >= '1') && (str[0] <= '6')) // IR1..6
+    {
+      size_t channel = str[0] - '1' + 2;  // IR1 value is adcResult[2]
+      str[0] = adcResult[channel]>>4;     // 12bit adc to 8bit responce
+    }
+    else
+    {
+      str[0] = 'n';
+      status = STATUS_ERROR;
+    }
 
+    /* check status */
+    if (status_last != status)
+    {
+      status_last = status;
+      xQueueSend(StatusHandle, &status, 0);
+    }
+
+    /* send response */
+    HAL_UART_Transmit(&huart1, str, i, 100);
+    i=0;
+    data=0;
   }
   /* USER CODE END StartUARTTask */
 }
@@ -267,8 +272,9 @@ void StartStatusTask(void const * argument)
       status = STATUS_POWER_NORMAL;
     }
 
-    /* check last status */
-    if (status_last != status) {
+    /* check status */
+    if (status_last != status)
+    {
       status_last = status;
       xQueueSend(StatusHandle, &status, 0);
     }
