@@ -200,7 +200,7 @@ void StartStatusTask(void const * argument)
   for(;;)
   {
     /* Battery voltage is 11 * ADC input voltage */
-    float battery_V = 11.0 * adcResult[0] * 3.3 / 4095.;
+    float battery_V = GetBatteryVoltage();
     if (battery_V < 10.0)
     {
       status = STATUS_POWER_LOW;

@@ -66,7 +66,7 @@ static StatusTypeDef RequestApply(const char * request, char * response)
       ROBOT_Right(80);
       break;
     case 'A':;
-      float battery_V = 11 * adcResult[0] * 3.3 / 4095;
+      float battery_V = GetBatteryVoltage();
       int partInt  = (int)battery_V;
       int partFrac = (int)((battery_V - partInt) * 10.0);
       snprintf(response, REQUEST_BUF_SIZE, "%d.%d\n", partInt, partFrac);

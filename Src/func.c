@@ -15,7 +15,7 @@ uint16_t adcResult[8];
 
 /** Starts the PWM signal generation for all control channels
   */
-void ROBOT_Init()
+void ROBOT_Init(void)
 {
   // Right motor
   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
@@ -105,7 +105,7 @@ void ROBOT_Right(uint16_t vel)
 
 /** Stop for all motor
   */
-void ROBOT_Stop()
+void ROBOT_Stop(void)
 {
   // Right motor
   __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, 0);
@@ -114,6 +114,14 @@ void ROBOT_Stop()
   __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 0);
   __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 0);
 }
+
+/** Get voltage from battery using 1/11 voltage divider befor adc
+  */
+float GetBatteryVoltage(void)
+{
+  return 11 * adcResult[0] * 3.3 / 4095;
+}
+
 
 /**
   * @}
