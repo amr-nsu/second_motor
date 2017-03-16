@@ -199,7 +199,6 @@ void StartStatusTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    /* Battery voltage is 11 * ADC input voltage */
     float battery_V = GetBatteryVoltage();
     if (battery_V < 10.0)
     {
