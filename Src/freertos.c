@@ -48,10 +48,7 @@
 
 /* USER CODE BEGIN Includes */     
 #include "gpio.h"
-#include "func.h"
-#include "usart.h"
-#include "stdlib.h"
-#include "string.h"
+#include "request.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -172,79 +169,15 @@ void StartIndicatorTask(void const * argument)
 void StartUARTTask(void const * argument)
 {
   /* USER CODE BEGIN StartUARTTask */
-  uint8_t data = 0;
-  char str[16];
-  int i=0;
-  char * endptr;
   StatusTypeDef status;
   StatusTypeDef status_last = STATUS_NONE;
 
-  ROBOT_Init();
+  RequestStart();
 
   /* Infinite loop */
   for(;;)
   {
-    /* get request */
-    while(data != '\n')
-    {
-      if (HAL_UART_Receive(&huart1, &data, 1, 100) == HAL_OK)
-      {
-        str[i] = (char)data;
-        i++;
-      }
-    }
-    str[i] = 0;
-    i = 0;
-    data = 0;
-
-    /* apply request */
-    char request = str[0];
-    status = STATUS_OK;
-    if (request == 'M')
-    {
-      int v1 = strtol((char *)str+1, &endptr, 10);
-      int v2 = strtol(endptr+1, &endptr, 10);
-      ROBOT_Move(v1, v2);
-    }
-    else if (request == 'B')
-    {
-      ROBOT_Backward(100);
-    }
-    else if (request == 'F')
-    {
-      ROBOT_Forward(100);
-    }
-    else if (request == 'S')
-    {
-      ROBOT_Stop();
-    }
-    else if (request == 'R')
-    {
-      ROBOT_Right(80);
-    }
-    else if (request == 'L')
-    {
-      ROBOT_Left(80);
-    }
-    else if (request == 'A') // Battery
-    {
-      float battery_V = 11.0 * adcResult[0] * 3.3 / 4095.;
-
-      int partInt  = (int)battery_V;
-      int partFrac = (int)((battery_V - partInt) * 10.0);
-      sprintf(str, "%d.%d\n", partInt, partFrac);
-    }
-    else if ((request >= '1') && (request <= '6')) // IR1..6
-    {
-      size_t channel = request - '1' + 2;
-      sprintf(str, "%d\n", adcResult[channel]);
-
-    }
-    else
-    {
-      str[0] = 'n';
-      status = STATUS_ERROR;
-    }
+    status = RequestNext();
 
     /* check status */
     if (status_last != status)
@@ -252,9 +185,6 @@ void StartUARTTask(void const * argument)
       status_last = status;
       xQueueSend(StatusHandle, &status, 0);
     }
-
-    /* send response */
-    HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 100);
   }
   /* USER CODE END StartUARTTask */
 }
