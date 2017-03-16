@@ -57,7 +57,7 @@ static StatusTypeDef RequestApply(const char * request, char * response)
       ROBOT_Backward(100);
       break;
     case 'S':
-      ROBOT_Stop(100);
+      ROBOT_Stop();
       break;
     case 'L':
       ROBOT_Left(80);
