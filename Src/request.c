@@ -48,7 +48,7 @@ static StatusTypeDef RequestApply(const char * request, char * response)
   switch (r.command)
   {
     case 'M':
-      ROBOT_Move(r.args[0], r.args[0]);
+      ROBOT_Move(r.args[0], r.args[1]);
       break;
     case 'F':
       ROBOT_Forward(100);
