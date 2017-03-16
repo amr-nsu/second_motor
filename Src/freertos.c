@@ -46,7 +46,6 @@
 #include "task.h"
 #include "cmsis_os.h"
 
-
 /* USER CODE BEGIN Includes */     
 #include "gpio.h"
 #include "func.h"

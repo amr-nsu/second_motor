@@ -71,6 +71,7 @@
 #define ADC_IR5_GPIO_Port GPIOA
 #define ADC_IR6_Pin GPIO_PIN_7
 #define ADC_IR6_GPIO_Port GPIOA
+
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
