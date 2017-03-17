@@ -91,7 +91,7 @@ static HAL_StatusTypeDef RequestSend(const char * response)
   return HAL_UART_Transmit(&huart1, (uint8_t *)response, strlen(response), 10);
 }
 
-StatusTypeDef RequestNext()
+StatusTypeDef RequestNext(void)
 {
   char  request[REQUEST_BUF_SIZE];
   char response[REQUEST_BUF_SIZE];
@@ -110,7 +110,7 @@ StatusTypeDef RequestNext()
   return status;
 }
 
-void RequestStart()
+void RequestStart(void)
 {
   ROBOT_Init();
 }

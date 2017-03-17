@@ -16,7 +16,7 @@ typedef struct
   int args[2];
 } RequestTypeDef;
 
-StatusTypeDef RequestNext();
-void RequestStart();
+StatusTypeDef RequestNext(void);
+void RequestStart(void);
 
 #endif /* __REQUEST_H */
