@@ -24,14 +24,16 @@ typedef enum
   STATUS_POWER_NORMAL,
 } StatusTypeDef;
 
-/* Function prototypes */
+/* Function prototypes of mechanics control */
+float GetBatteryVoltage(void);
+
+/* Function prototypes of robot control */
 void ROBOT_Init(void);
 void ROBOT_Forward(uint16_t);
 void ROBOT_Backward(uint16_t);
 void ROBOT_Right(uint16_t);
 void ROBOT_Left(uint16_t);
-void ROBOT_Move (int16_t, int16_t);
+void ROBOT_Move (int, int);
 void ROBOT_Stop(void);
-float GetBatteryVoltage(void);
 
 #endif  // __FUNC_H
