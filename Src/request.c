@@ -40,6 +40,26 @@ static StatusTypeDef RequestReceive(char * request)
   return status;
 }
 
+static void ResponseVoltage(char* response)
+{
+  float battery_V = GetBatteryVoltage();
+  int partInt = (int) battery_V;
+  int partFrac = (int) ((battery_V - partInt) * 10.0);
+  snprintf(response, REQUEST_BUF_SIZE, "%d.%d\n", partInt, partFrac);
+}
+
+static void ResponseIR(const RequestTypeDef* r, char* response)
+{
+  size_t channel = r->command - '1' + 2;
+  snprintf(response, REQUEST_BUF_SIZE, "%d\n", adcResult[channel]);
+}
+
+static StatusTypeDef ResponseDefault(char* response)
+{
+  snprintf(response, REQUEST_BUF_SIZE, "wrong command\n");
+  return STATUS_ERROR;
+}
+
 static StatusTypeDef RequestApply(const char * request, char * response)
 {
   StatusTypeDef status = STATUS_OK;
@@ -65,22 +85,17 @@ static StatusTypeDef RequestApply(const char * request, char * response)
   case 'R':
     ROBOT_Right(80);
     break;
-  case 'A':;
-    float battery_V = GetBatteryVoltage();
-    int partInt  = (int)battery_V;
-    int partFrac = (int)((battery_V - partInt) * 10.0);
-    snprintf(response, REQUEST_BUF_SIZE, "%d.%d\n", partInt, partFrac);
+  case 'A':
+    ResponseVoltage(response);
     break;
   default:
     if ((r.command >= '1') && (r.command <= '6'))  // IR1..6
     {
-      size_t channel = r.command - '1' + 2;
-      snprintf(response, REQUEST_BUF_SIZE, "%d\n", adcResult[channel]);
+      ResponseIR(&r, response);
     }
     else
     {
-      snprintf(response, REQUEST_BUF_SIZE, "wrong command\n");
-      status = STATUS_ERROR;
+      status = ResponseDefault(response);
     }
   }
   return status;
