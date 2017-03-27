@@ -47,41 +47,41 @@ static StatusTypeDef RequestApply(const char * request, char * response)
   strcpy(response, request);
   switch (r.command)
   {
-    case 'M':
-      ROBOT_Move(r.args[0], r.args[1]);
-      break;
-    case 'F':
-      ROBOT_Forward(100);
-      break;
-    case 'B':
-      ROBOT_Backward(100);
-      break;
-    case 'S':
-      ROBOT_Stop();
-      break;
-    case 'L':
-      ROBOT_Left(80);
-      break;
-    case 'R':
-      ROBOT_Right(80);
-      break;
-    case 'A':;
-      float battery_V = GetBatteryVoltage();
-      int partInt  = (int)battery_V;
-      int partFrac = (int)((battery_V - partInt) * 10.0);
-      snprintf(response, REQUEST_BUF_SIZE, "%d.%d\n", partInt, partFrac);
-      break;
-    default:
-      if ((r.command >= '1') && (r.command <= '6')) // IR1..6
-      {
-        size_t channel = r.command - '1' + 2;
-        snprintf(response, REQUEST_BUF_SIZE, "%d\n", adcResult[channel]);
-      }
-      else
-      {
-        snprintf(response, REQUEST_BUF_SIZE, "wrong command\n");
-        status = STATUS_ERROR;
-      }
+  case 'M':
+    ROBOT_Move(r.args[0], r.args[1]);
+    break;
+  case 'F':
+    ROBOT_Forward(100);
+    break;
+  case 'B':
+    ROBOT_Backward(100);
+    break;
+  case 'S':
+    ROBOT_Stop();
+    break;
+  case 'L':
+    ROBOT_Left(80);
+    break;
+  case 'R':
+    ROBOT_Right(80);
+    break;
+  case 'A':;
+    float battery_V = GetBatteryVoltage();
+    int partInt  = (int)battery_V;
+    int partFrac = (int)((battery_V - partInt) * 10.0);
+    snprintf(response, REQUEST_BUF_SIZE, "%d.%d\n", partInt, partFrac);
+    break;
+  default:
+    if ((r.command >= '1') && (r.command <= '6'))  // IR1..6
+    {
+      size_t channel = r.command - '1' + 2;
+      snprintf(response, REQUEST_BUF_SIZE, "%d\n", adcResult[channel]);
+    }
+    else
+    {
+      snprintf(response, REQUEST_BUF_SIZE, "wrong command\n");
+      status = STATUS_ERROR;
+    }
   }
   return status;
 }
